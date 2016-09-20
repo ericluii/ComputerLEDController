@@ -14,8 +14,13 @@ INC_DIR=include
 SUPPORT_DIR=support_files
 
 # Flags
-CFLAGS:= -mmcu=msp430g2553 -c -O0 -g3 -ggdb -gdwarf-2 -Wall -Werror -Wextra -Wshadow -std=gnu90 -MMD -I$(INC_DIR) -I$(SUPPORT_DIR)
-LDFLAGS:= -L $(SUPPORT_DIR) -mmcu=msp430g2553
+ifeq ($(OS),Windows_NT)
+	CFLAGS:= -mmcu=msp430g2553 -c -O0 -g3 -ggdb -gdwarf-2 -Wall -Werror -Wextra -Wshadow -std=gnu90 -MMD -I$(INC_DIR)
+	LDFLAGS:= -mmcu=msp430g2553
+else
+	CFLAGS:= -mmcu=msp430g2553 -c -O0 -g3 -ggdb -gdwarf-2 -Wall -Werror -Wextra -Wshadow -std=gnu90 -MMD -I$(INC_DIR) -I$(SUPPORT_DIR)
+	LDFLAGS:= -L $(SUPPORT_DIR) -mmcu=msp430g2553
+endif
 
 # Files
 SRC:=$(wildcard $(SRC_DIR)/*.c)
