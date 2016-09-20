@@ -11,10 +11,11 @@ W_BIN_DIR=$(BUILD_DIR)\bin
 BUILD_DIR=build
 SRC_DIR=src
 INC_DIR=include
+SUPPORT_DIR=support_files
 
 # Flags
-CFLAGS:= -mmcu=msp430g2553 -c -O0 -g3 -ggdb -gdwarf-2 -Wall -Werror -Wextra -Wshadow -std=gnu90 -MMD -I$(INC_DIR)
-LDFLAGS:= -mmcu=msp430g2553
+CFLAGS:= -mmcu=msp430g2553 -c -O0 -g3 -ggdb -gdwarf-2 -Wall -Werror -Wextra -Wshadow -std=gnu90 -MMD -I$(INC_DIR) -I$(SUPPORT_DIR)
+LDFLAGS:= -L $(SUPPORT_DIR) -mmcu=msp430g2553
 
 # Files
 SRC:=$(wildcard $(SRC_DIR)/*.c)
@@ -30,8 +31,8 @@ setup:
 	if not exist $(W_BIN_DIR) mkdir $(W_BIN_DIR)
 else
 setup:
-	mkdir -f -p $(OBJ_DIR)
-	mkdir -f -p $(BIN_DIR)
+	mkdir -p $(OBJ_DIR)
+	mkdir -p $(BIN_DIR)
 endif
 
 .PHONY: all
@@ -55,5 +56,5 @@ debug:
 	$(DEBUG) tilib
 else
 debug:
-	$(DEBUG) rf2500
+	mspdebug rf2500
 endif
