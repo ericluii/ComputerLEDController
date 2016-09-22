@@ -1,24 +1,24 @@
+#include <stdint.h>
 #include "configure.h"
 
-// TODO: FIX THIS
 void _verify_tag_length_value() {
-  //unsigned int checksum = *((unsigned int *) 0x10C0);
-  unsigned int address = 0x10C0;
-  unsigned int xor_accumulator = 0;
+  uint16_t * address = (uint16_t *) 0x10C2;
+  uint16_t xor_accumulator = 0;
 
-  int test = 1;
   // CALBC1_1MHZ is the last entry in the TLV table
-  while (test < 32) {
-    xor_accumulator ^= *((unsigned int *) address + (2 * test));
-    test++;
+  while (address < (uint16_t *) 0x1100) {
+    xor_accumulator ^= *(address++);
   }
 
-  if (xor_accumulator == xor_accumulator) {
+  if (xor_accumulator + TLV_CHECKSUM == 0) {
     P1DIR = BIT6;
     P1OUT = BIT6;
   } else {
     P1DIR = BIT0;
     P1OUT = BIT0;
+
+    // Lock in error state if bad TLV
+    while (1) { /* no-op */}
   }
 }
 
