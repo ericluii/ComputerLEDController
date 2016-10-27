@@ -12,21 +12,20 @@ int main(void)
     // Ready to do stuff
     watchdog_enable();
 
-    /* Set P1.0 direction to output */
-    P1DIR |= 0x01;
+    // Notify that startup succeeded
+    // Turn on LED P1.6
+    P1DIR = BIT6;
+    P1OUT = BIT6;
 
-    /* Set P1.0 output high */
-    P1OUT |= 0x01;
-
-    __delay_cycles(1000000);
-
+    // Prep LED P1.0 for output
+    P1DIR |= BIT0;
     while (1) {
         watchdog_pet();
         /* Wait for 200000 cycles */
         __delay_cycles(200000);
 
         /* Toggle P1.0 output */
-        P1OUT ^= 0x01;
+        P1OUT ^= BIT0;
     }
 
     return 0;

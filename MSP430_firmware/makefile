@@ -1,7 +1,6 @@
 # Makefile to generate MSP430 binary
 PROGRAM=ComputerLEDController
 CC:=$(MSP430_UTILS)/msp430-gcc
-DEBUG:=$(MSP430_UTILS)/mspdebug
 
 # Directories
 OBJ_DIR=$(BUILD_DIR)/obj
@@ -11,15 +10,14 @@ W_BIN_DIR=$(BUILD_DIR)\bin
 BUILD_DIR=build
 SRC_DIR=src
 INC_DIR=include
-SUPPORT_DIR=support_files
 
 # Flags
 ifeq ($(OS),Windows_NT)
-	CFLAGS:= -mmcu=msp430g2553 -c -O0 -g3 -ggdb -gdwarf-2 -Wall -Werror -Wextra -Wshadow -std=gnu90 -MMD -I$(INC_DIR)
-	LDFLAGS:= -mmcu=msp430g2553
+	CFLAGS:= -mmcu=msp430g2553 -c -O0 -g3 -ggdb -gdwarf-2 -Wall -Werror -Wextra -Wshadow -std=gnu90 -MMD -I$(INC_DIR) -I$(MSP430_UTILS)/../include
+	LDFLAGS:= -L$(MSP430_UTILS)/../include -mmcu=msp430g2553
 else
-	CFLAGS:= -mmcu=msp430g2553 -c -O0 -g3 -ggdb -gdwarf-2 -Wall -Werror -Wextra -Wshadow -std=gnu90 -MMD -I$(INC_DIR) -I$(SUPPORT_DIR)
-	LDFLAGS:= -L $(SUPPORT_DIR) -mmcu=msp430g2553
+	CFLAGS:= -mmcu=msp430g2553 -c -O0 -g3 -ggdb -gdwarf-2 -Wall -Werror -Wextra -Wshadow -std=gnu90 -MMD -I$(INC_DIR) -I support_files
+	LDFLAGS:= -L support_files -mmcu=msp430g2553
 endif
 
 # Files
@@ -58,7 +56,7 @@ clean:
 .PHONY: debug
 ifeq ($(OS),Windows_NT)
 debug:
-	$(DEBUG) tilib
+	$(MSP430_UTILS)/../../SysGCC/msp430/bin/mspdebug tilib
 else
 debug:
 	mspdebug rf2500

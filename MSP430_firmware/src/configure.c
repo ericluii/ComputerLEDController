@@ -11,9 +11,16 @@ void _verify_tag_length_value() {
   }
 
   if (xor_accumulator + TLV_CHECKSUM == 0) {
+    // Toggle on P1.6 if checksum passes
     P1DIR = BIT6;
-    P1OUT = BIT6;
+
+    int i;
+    for (i = 0; i < 10; i++) {
+      P1OUT ^= BIT6;
+      __delay_cycles(200000);
+    }
   } else {
+    // Turn on P1.0 and do nothing if checksum fails
     P1DIR = BIT0;
     P1OUT = BIT0;
 
